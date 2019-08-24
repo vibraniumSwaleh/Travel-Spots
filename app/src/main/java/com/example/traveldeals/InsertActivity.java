@@ -15,6 +15,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class InsertActivity extends AppCompatActivity {
 
+    public static final String TRAVELDEALS_CHILD = "traveldeals";
     private FirebaseDatabase mFirebaseDatabase;
     private DatabaseReference mDatabaseReference;
     EditText txtTitle;
@@ -26,9 +27,9 @@ public class InsertActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mDatabaseReference = mFirebaseDatabase.getReference()
-                .child("traveldeals");
+        FirebaseUtil.openFbReference(TRAVELDEALS_CHILD);
+        mFirebaseDatabase = FirebaseUtil.mFirebaseDatabase;
+        mDatabaseReference = FirebaseUtil.mDatabaseReference;
 
         txtTitle = (EditText) findViewById(R.id.txtTitle);
         txtDescription = (EditText) findViewById(R.id.txtDescription);

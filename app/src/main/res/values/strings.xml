@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Traveldeals</string>
+    <string name="app_name">Travel Deals</string>
     <string name="title_hint">Deal Title</string>
     <string name="price_hint">Price (numbers only)</string>
     <string name="description_hint">Description</string>
-    <string name="save">save</string>
+    <string name="save">Save</string>
 </resources>
