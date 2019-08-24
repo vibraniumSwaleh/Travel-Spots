@@ -3,6 +3,7 @@ package com.example.traveldeals;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,12 +18,12 @@ import com.google.firebase.database.FirebaseDatabase;
 public class DealActivity extends AppCompatActivity {
 
     public static final String TRAVELDEALS_CHILD = "traveldeals";
-    private FirebaseDatabase mFirebaseDatabase;
-    private DatabaseReference mDatabaseReference;
     EditText txtTitle;
     EditText txtDescription;
     EditText txtPrice;
     TravelDeal deal;
+    private FirebaseDatabase mFirebaseDatabase;
+    private DatabaseReference mDatabaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,46 +43,69 @@ public class DealActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.save_menu:
                 saveDeal();
-                Toast.makeText(this,"Deal saved successfully!",
-                        Toast.LENGTH_LONG).show();
-                clean();
-                backToList();
+//                Toast.makeText(this,"Deal saved successfully!",
+//                        Toast.LENGTH_LONG).show();
+//                clean();
+//                backToList();
                 return true;
             case R.id.delete_menu:
+                Log.d("Delete deal", "Deal menu selected");
                 deleteDeal();
-                Toast.makeText(this,"Deal deleted", Toast.LENGTH_LONG).show();
+                Log.d("Delete deal", "Deal method called");
+                Toast.makeText(this, "Deal deleted", Toast.LENGTH_LONG).show();
                 backToList();
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 
     private void saveDeal() {
-        deal.setTitle(txtTitle.getText().toString());
-        deal.setDescription(txtDescription.getText().toString());
-        deal.setPrice(txtPrice.getText().toString());
-
-        if (deal.getId() == null){
-            Log.d("deal.getId()", "deal ID: " + deal.getId());
-            mDatabaseReference.push().setValue(deal);
+        if (TextUtils.isEmpty(txtTitle.getText())) {
+            txtTitle.setError("Deal Title cannot be empty!");
+            return;
         }
-        else {
-            mDatabaseReference.child(deal.getId()).setValue(deal);
+        if (TextUtils.isEmpty(txtPrice.getText())) {
+            txtPrice.setError("Price cannot be empty!");
+            return;
+        }
+        if (TextUtils.isEmpty(txtDescription.getText())) {
+            txtDescription.setError("Description cannot be empty!");
+            return;
+        }
+
+        if (TextUtils.isEmpty(txtTitle.getText()) == false
+                && TextUtils.isEmpty(txtTitle.getText()) == false
+                && TextUtils.isEmpty(txtTitle.getText()) == false) {
+            deal.setTitle(txtTitle.getText().toString());
+            deal.setDescription(txtDescription.getText().toString());
+            deal.setPrice(txtPrice.getText().toString());
+
+            if (deal.getId() == null) {
+                Log.d("deal.getId()", "deal ID: " + deal.getId());
+                mDatabaseReference.push().setValue(deal);
+            } else {
+                mDatabaseReference.child(deal.getId()).setValue(deal);
+            }
+            Toast.makeText(this, "Deal saved successfully!",
+                    Toast.LENGTH_LONG).show();
+            clean();
+            backToList();
         }
     }
 
-    private void deleteDeal(){
-        if (deal == null){
+    private void deleteDeal() {
+        if (deal == null) {
             Toast.makeText(this, "Please save the deal before deleting", Toast.LENGTH_LONG).show();
             return;
         }
         mDatabaseReference.child(deal.getId()).removeValue();
+        backToList();
     }
 
-    private void backToList(){
+    private void backToList() {
         Intent intent = new Intent(this, ListActivity.class);
         startActivity(intent);
     }
@@ -100,10 +124,10 @@ public class DealActivity extends AppCompatActivity {
         return true;
     }
 
-    private void clickedDeal(){
+    private void clickedDeal() {
         Intent intent = getIntent();
         TravelDeal deal = (TravelDeal) intent.getSerializableExtra("Deal");
-        if (deal == null){
+        if (deal == null) {
             deal = new TravelDeal();
         }
         this.deal = deal;
