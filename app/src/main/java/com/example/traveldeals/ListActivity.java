@@ -28,6 +28,13 @@ public class ListActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_activity_menu, menu);
+        MenuItem insertmenu = menu.findItem(R.id.insert_menu);
+        if (FirebaseUtil.isAdmin == true){
+            insertmenu.setVisible(true);
+        }
+        else{
+            insertmenu.setVisible(false);
+        }
         return true;
     }
 
@@ -70,5 +77,9 @@ public class ListActivity extends AppCompatActivity {
                         false);
         rvDeals.setLayoutManager(dealsLayoutManager);
         FirebaseUtil.attachListener();
+    }
+
+    public void showMenu(){
+        invalidateOptionsMenu();
     }
 }
